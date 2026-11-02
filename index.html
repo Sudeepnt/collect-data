@@ -40,8 +40,8 @@
   <form id="f" novalidate>
     <fieldset>
       <legend>Company &amp; owner</legend>
-      <label>Company name</label>
-      <input name="company_name" value="Gattabara Games (GG)" readonly>
+      <label class="req" for="company">Company name</label>
+      <input id="company" name="company_name" value="Gattabara Games (GG)" required autocomplete="organization">
 
       <label class="req" for="owner">Owner / main person – full name <span class="hint">(as on your ID)</span></label>
       <input id="owner" name="owner_full_name" required autocomplete="name">
