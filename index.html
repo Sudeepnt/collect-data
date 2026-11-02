@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gattabara Games – Developer Account Details</title>
+<style>
+  :root { --ink:#1b1d21; --mute:#6b7280; --line:#d9dce1; --accent:#2563eb; --bg:#f5f6f8; --err:#c62828; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+  main { max-width:640px; margin:0 auto; padding:32px 20px 64px; }
+  h1 { font-size:24px; margin:0 0 4px; }
+  .sub { color:var(--mute); margin:0 0 24px; }
+  fieldset { background:#fff; border:1px solid var(--line); border-radius:12px; padding:20px; margin:0 0 20px; }
+  legend { font-weight:600; padding:0 8px; font-size:15px; }
+  label { display:block; font-size:14px; font-weight:500; margin:14px 0 6px; }
+  label:first-of-type { margin-top:0; }
+  .hint { color:var(--mute); font-size:13px; font-weight:400; }
+  input, select, textarea { width:100%; padding:10px 12px; font:inherit; border:1px solid var(--line); border-radius:8px; background:#fff; }
+  input:focus, select:focus { outline:2px solid var(--accent); outline-offset:-1px; }
+  input[readonly] { background:#f0f1f3; color:var(--mute); }
+  input[type=file] { padding:8px; }
+  .row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .row label { margin-top:14px; }
+  .row:first-of-type label { margin-top:0; }
+  @media (max-width:520px) { .row { grid-template-columns:1fr; } }
+  button { width:100%; padding:14px; font:inherit; font-weight:600; color:#fff; background:var(--accent); border:0; border-radius:10px; cursor:pointer; }
+  button:disabled { opacity:.6; cursor:wait; }
+  .req::after { content:" *"; color:var(--err); }
+  .note { font-size:13px; color:var(--mute); margin-top:12px; }
+  #done { display:none; background:#fff; border:1px solid var(--line); border-radius:12px; padding:24px; }
+  #err { color:var(--err); font-size:14px; margin-top:10px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Developer Account Details</h1>
+  <p class="sub">Details needed to create the Google Play and Apple Developer accounts for your company. Fields marked * are required.</p>
+
+  <form id="f" novalidate>
+    <fieldset>
+      <legend>Company &amp; owner</legend>
+      <label>Company name</label>
+      <input name="company_name" value="Gattabara Games (GG)" readonly>
+
+      <label class="req" for="owner">Owner / main person – full name <span class="hint">(as on your ID)</span></label>
+      <input id="owner" name="owner_full_name" required autocomplete="name">
+
+      <label class="req" for="gmail">Google email <span class="hint">(this will be the account login)</span></label>
+      <input id="gmail" name="google_email" type="email" required autocomplete="email">
+
+      <label class="req" for="phone">Phone number <span class="hint">(a verification code will be sent here later)</span></label>
+      <input id="phone" name="phone" type="tel" required autocomplete="tel">
+    </fieldset>
+
+    <fieldset>
+      <legend>Company address</legend>
+      <label class="req" for="addr">Street address</label>
+      <input id="addr" name="address" required autocomplete="street-address">
+      <div class="row">
+        <div><label class="req" for="city">City</label><input id="city" name="city" required autocomplete="address-level2"></div>
+        <div><label class="req" for="state">State</label><input id="state" name="state" required autocomplete="address-level1"></div>
+      </div>
+      <label class="req" for="pin">PIN code</label>
+      <input id="pin" name="pin" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" required autocomplete="postal-code">
+    </fieldset>
+
+    <fieldset>
+      <legend>Business details <span class="hint">(for the D-U-N-S number)</span></legend>
+      <label class="req" for="btype">Business type</label>
+      <select id="btype" name="business_type" required>
+        <option value="">Select…</option>
+        <option>Private Limited Company</option>
+        <option>LLP</option>
+        <option>Partnership</option>
+        <option>Sole Proprietorship</option>
+        <option>Other</option>
+      </select>
+
+      <label class="req" for="nature">Nature of business</label>
+      <input id="nature" name="nature_of_business" placeholder="e.g. Mobile game development" required>
+
+      <div class="row">
+        <div><label class="req" for="year">Year established</label><input id="year" name="year_established" inputmode="numeric" maxlength="4" required></div>
+        <div><label class="req" for="emp">Number of employees</label><input id="emp" name="employees" inputmode="numeric" required></div>
+      </div>
+
+      <label class="req" for="reg">Registration number <span class="hint">(CIN / LLP number)</span></label>
+      <input id="reg" name="registration_number" required>
+
+      <label for="gst">GST number <span class="hint">(leave blank if none)</span></label>
+      <input id="gst" name="gst_number" maxlength="15">
+
+      <label class="req" for="turn">Yearly domestic turnover</label>
+      <select id="turn" name="domestic_turnover" required>
+        <option value="">Select…</option>
+        <option>Below ₹40 lakh</option>
+        <option>₹40 lakh – ₹1.5 crore</option>
+        <option>₹1.5 crore – ₹5 crore</option>
+        <option>Above ₹5 crore</option>
+        <option>Not started / no turnover yet</option>
+      </select>
+    </fieldset>
+
+    <fieldset>
+      <legend>Identity proof</legend>
+      <label class="req" for="idtype">Document type</label>
+      <select id="idtype" name="id_type" required>
+        <option value="">Select…</option>
+        <option>Driving licence</option>
+        <option>Voter ID</option>
+        <option>PAN card</option>
+      </select>
+      <div class="row">
+        <div><label class="req" for="idf">Front</label><input id="idf" name="id_front" type="file" accept="image/*,.pdf" required></div>
+        <div><label class="req" for="idb">Back</label><input id="idb" name="id_back" type="file" accept="image/*,.pdf" required></div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Additional verification document</legend>
+      <label class="req" for="adtype">Document type <span class="hint">(must be from the last 60 days)</span></label>
+      <select id="adtype" name="additional_doc_type" required>
+        <option value="">Select…</option>
+        <option>Utility bill</option>
+        <option>Phone bill</option>
+        <option>Bank statement</option>
+      </select>
+      <label class="req" for="adf">Upload</label>
+      <input id="adf" name="additional_doc" type="file" accept="image/*,.pdf" required>
+    </fieldset>
+
+    <button id="go" type="submit">Submit</button>
+    <div id="err" role="alert"></div>
+    <p class="note">Card details are not collected here – we'll ask for them directly when the store asks for payment. Your information stays on your device until you send the downloaded file back to us.</p>
+  </form>
+
+  <div id="done">
+    <h2 style="margin-top:0">Thank you ✅</h2>
+    <p>A file named <b>gattabara-details.json</b> was just downloaded. Please send it back to us (WhatsApp or email) to finish.</p>
+    <p class="note">Nothing was uploaded to any server.</p>
+  </div>
+</main>
+
+<script>
+const f = document.getElementById('f');
+const readFile = file => new Promise((res, rej) => {
+  const r = new FileReader();
+  r.onload = () => res({ name: file.name, type: file.type, data: r.result });
+  r.onerror = rej;
+  r.readAsDataURL(file);
+});
+
+f.addEventListener('submit', async e => {
+  e.preventDefault();
+  const err = document.getElementById('err');
+  err.textContent = '';
+  if (!f.checkValidity()) { f.reportValidity(); return; }
+  const btn = document.getElementById('go');
+  btn.disabled = true; btn.textContent = 'Preparing…';
+  try {
+    const out = {};
+    for (const el of f.elements) {
+      if (!el.name) continue;
+      out[el.name] = el.type === 'file' ? await readFile(el.files[0]) : el.value.trim();
+    }
+    out.submitted_at = new Date().toISOString();
+    const blob = new Blob([JSON.stringify(out, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'gattabara-details.json';
+    a.click();
+    f.style.display = 'none';
+    document.getElementById('done').style.display = 'block';
+    window.scrollTo(0, 0);
+  } catch (x) {
+    err.textContent = 'Something went wrong reading the files. Please try again.';
+    btn.disabled = false; btn.textContent = 'Submit';
+  }
+});
+</script>
+</body>
+</html>
