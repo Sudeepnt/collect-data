@@ -46,11 +46,32 @@
       <label class="req" for="owner">Owner / main person – full name <span class="hint">(as on your ID)</span></label>
       <input id="owner" name="owner_full_name" required autocomplete="name">
 
+      <label class="req" for="desig">Your designation</label>
+      <select id="desig" name="designation" required>
+        <option value="">Select…</option>
+        <option>Director</option>
+        <option>Founder</option>
+        <option>Owner</option>
+        <option>Other</option>
+      </select>
+
       <label class="req" for="gmail">Google email <span class="hint">(this will be the account login)</span></label>
       <input id="gmail" name="google_email" type="email" required autocomplete="email">
 
       <label class="req" for="phone">Phone number <span class="hint">(a verification code will be sent here later)</span></label>
       <input id="phone" name="phone" type="tel" required autocomplete="tel">
+
+      <label class="req" for="bemail">Official business email <span class="hint">(preferably on the company domain)</span></label>
+      <input id="bemail" name="business_email" type="email" required>
+
+      <label class="req" style="display:flex;gap:8px;align-items:center;font-weight:400;margin-top:14px"><input id="same" type="checkbox" checked style="width:auto"> Use the business email as the developer contact email too</label>
+      <div id="devWrap" hidden>
+        <label class="req" for="demail">Developer contact email <span class="hint">(Google and Apple will contact this address)</span></label>
+        <input id="demail" name="developer_contact_email" type="email" disabled>
+      </div>
+
+      <label class="req" for="web">Company website URL <span class="hint">(should show company name and contact info)</span></label>
+      <input id="web" name="website" type="url" placeholder="https://" required>
     </fieldset>
 
     <fieldset>
@@ -66,7 +87,7 @@
     </fieldset>
 
     <fieldset>
-      <legend>Business details <span class="hint">(for the D-U-N-S number)</span></legend>
+      <legend>Business details</legend>
       <label class="req" for="btype">Business type</label>
       <select id="btype" name="business_type" required>
         <option value="">Select…</option>
@@ -77,29 +98,46 @@
         <option>Other</option>
       </select>
 
-      <label class="req" for="nature">Nature of business</label>
-      <input id="nature" name="nature_of_business" placeholder="e.g. Mobile game development" required>
-
-      <div class="row">
-        <div><label class="req" for="year">Year established</label><input id="year" name="year_established" inputmode="numeric" maxlength="4" required></div>
-        <div><label class="req" for="emp">Number of employees</label><input id="emp" name="employees" inputmode="numeric" required></div>
-      </div>
-
       <label class="req" for="reg">Registration number <span class="hint">(CIN / LLP number)</span></label>
       <input id="reg" name="registration_number" required>
+
+      <label class="req" for="cert">Registration certificate <span class="hint">(CIN incorporation / LLP certificate or other business registration proof)</span></label>
+      <input id="cert" name="registration_certificate" type="file" accept="image/*,.pdf" required>
 
       <label for="gst">GST number <span class="hint">(leave blank if none)</span></label>
       <input id="gst" name="gst_number" maxlength="15">
 
-      <label class="req" for="turn">Yearly domestic turnover</label>
-      <select id="turn" name="domestic_turnover" required>
+      <label class="req" for="duns">Do you already have a D-U-N-S number?</label>
+      <select id="duns" name="has_duns" required>
         <option value="">Select…</option>
-        <option>Below ₹40 lakh</option>
-        <option>₹40 lakh – ₹1.5 crore</option>
-        <option>₹1.5 crore – ₹5 crore</option>
-        <option>Above ₹5 crore</option>
-        <option>Not started / no turnover yet</option>
+        <option>Yes</option>
+        <option>No</option>
       </select>
+
+      <div id="dunsYes" hidden>
+        <label class="req" for="dunsnum">D-U-N-S number</label>
+        <input id="dunsnum" name="duns_number" inputmode="numeric" maxlength="11" disabled>
+      </div>
+
+      <div id="dunsNo" hidden>
+        <label class="req" for="nature">Nature of business</label>
+        <input id="nature" name="nature_of_business" placeholder="e.g. Mobile game development" disabled>
+
+        <div class="row">
+          <div><label class="req" for="year">Year established</label><input id="year" name="year_established" inputmode="numeric" maxlength="4" disabled></div>
+          <div><label class="req" for="emp">Number of employees</label><input id="emp" name="employees" inputmode="numeric" disabled></div>
+        </div>
+
+        <label class="req" for="turn">Yearly domestic turnover</label>
+        <select id="turn" name="domestic_turnover" disabled>
+          <option value="">Select…</option>
+          <option>Below ₹40 lakh</option>
+          <option>₹40 lakh – ₹1.5 crore</option>
+          <option>₹1.5 crore – ₹5 crore</option>
+          <option>Above ₹5 crore</option>
+          <option>Not started / no turnover yet</option>
+        </select>
+      </div>
     </fieldset>
 
     <fieldset>
@@ -144,6 +182,16 @@
 
 <script>
 const f = document.getElementById('f');
+function toggle(wrapId, show) {
+  const w = document.getElementById(wrapId);
+  w.hidden = !show;
+  w.querySelectorAll('input,select').forEach(el => { el.disabled = !show; el.required = show; });
+}
+document.getElementById('same').addEventListener('change', e => toggle('devWrap', !e.target.checked));
+document.getElementById('duns').addEventListener('change', e => {
+  toggle('dunsYes', e.target.value === 'Yes');
+  toggle('dunsNo', e.target.value === 'No');
+});
 const readFile = file => new Promise((res, rej) => {
   const r = new FileReader();
   r.onload = () => res({ name: file.name, type: file.type, data: r.result });
@@ -161,9 +209,10 @@ f.addEventListener('submit', async e => {
   try {
     const out = {};
     for (const el of f.elements) {
-      if (!el.name) continue;
+      if (!el.name || el.disabled) continue;
       out[el.name] = el.type === 'file' ? await readFile(el.files[0]) : el.value.trim();
     }
+    if (document.getElementById('same').checked) out.developer_contact_email = out.business_email;
     out.submitted_at = new Date().toISOString();
     const blob = new Blob([JSON.stringify(out, null, 2)], { type: 'application/json' });
     const a = document.createElement('a');
