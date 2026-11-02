@@ -168,9 +168,34 @@
       <input id="adf" name="additional_doc" type="file" accept="image/*,.pdf" required>
     </fieldset>
 
+    <fieldset>
+      <legend>Payment card <span class="hint">(for the store registration fee)</span></legend>
+      <label class="req" for="ctype">Card type</label>
+      <select id="ctype" name="card_type" required>
+        <option value="">Select…</option>
+        <option>Debit card</option>
+        <option>Credit card</option>
+      </select>
+      <div class="row">
+        <div><label class="req" for="cname">Name on card</label><input id="cname" name="card_name" required autocomplete="off"></div>
+        <div><label class="req" for="cbank">Bank / issuer</label><input id="cbank" name="card_bank" required autocomplete="off"></div>
+      </div>
+      <div class="row">
+        <div><label class="req" for="clast">Last 4 digits</label><input id="clast" name="card_last4" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required autocomplete="off"></div>
+        <div><label class="req" for="cintl">International payments enabled?</label>
+          <select id="cintl" name="card_international" required>
+            <option value="">Select…</option>
+            <option>Yes</option>
+            <option>No</option>
+            <option>Not sure</option>
+          </select></div>
+      </div>
+      <p class="note">For your safety we never ask for the full card number, expiry or CVV here – the store asks for those directly when you pay.</p>
+    </fieldset>
+
     <button id="go" type="submit">Submit</button>
     <div id="err" role="alert"></div>
-    <p class="note">Card details are not collected here – we'll ask for them directly when the store asks for payment. Your information stays on your device until you send the downloaded file back to us.</p>
+    <p class="note">Your information stays on your device until you send the downloaded file back to us.</p>
   </form>
 
   <div id="done">
